@@ -6,6 +6,7 @@ let importantActionsCounter = 5;
 let galleryContainer = document.querySelector("section");
 let loader = document.querySelector(".section__loader");
 let loaderIntervalId;
+
 function showLoader() {
     loader.style.display = "block";
     loaderIntervalId = setInterval(() => {
@@ -23,15 +24,16 @@ function showLoader() {
         spansCounter++;
     }, 125);
 }
+
 async function loadImages() {
-    let response = await fetch("https://api.thecatapi.com/v1/images/search?limit=10");
+    const response = await fetch("https://api.thecatapi.com/v1/images/search?limit=10");
     if(!response.ok) {
         throw new Error(`При загрузке произошла ошибка. Код статуса ответа сервера – ${response.status}`);
     }
     else {
-        let data = await response.json();
+        const data = await response.json();
         if(data) {
-            let urlsArray = [];
+            const urlsArray = [];
             data.forEach((catObject) => {
                 urlsArray.push(catObject.url);
             });
@@ -39,8 +41,10 @@ async function loadImages() {
         }
     }
 }
+
 let buttonClickCounter = 0;
 let firstSuccessfulLoad = false;
+
 loadButton.addEventListener("click", function () {
     buttonClickCounter += 1;
     if(document.querySelector(".section__error-container1") !== null) {
@@ -55,14 +59,14 @@ loadButton.addEventListener("click", function () {
         });
     }
     showLoader();
-    let promisesArray = [];
+    const promisesArray = [];
     for(let i = 1; i <= importantActionsCounter; i++) {
-        let returnedPromise = loadImages();
+        const returnedPromise = loadImages();
         promisesArray.push(returnedPromise);
     }
     Promise.all(promisesArray).then((result) => {
         firstSuccessfulLoad = true;
-        let jointImagesArray = [];
+        const jointImagesArray = [];
         result.forEach((currentArray) => {
             currentArray.forEach((url) => {
                 jointImagesArray.push(url);
